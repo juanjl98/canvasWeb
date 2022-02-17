@@ -19,6 +19,12 @@
         }
 */
 
+let dificultad = {
+    ratioSpawn: 2000,
+    velocidadEnemigos: 1
+}
+let puntosTotales = 0;
+let contador = 500;
 const canvas = document.querySelector("canvas")
 const c = canvas.getContext("2d")
 
@@ -46,9 +52,31 @@ class Player {
     }
 }
 
+class Score {
+    constructor(x, y, color, font) {
+        this.x = x
+        this.y = y
+        this.color = color
+        this.font = font
+    }
+
+    draw() {
+        c.beginPath();
+        c.fillStyle = this.color
+        c.font = this.font
+        c.fillText(`puntos: ${puntosTotales}`, this.x, this.y)
+    }
+
+    update() {
+        this.draw()
+    }
+
+}
+
 const player = new Player(xCenter, yCenter, 30, 'yellow')
 console.log(player)
 player.draw()
+const score = new Score(100, 100, "white", "50px serif")
 
 class Projectile {
     constructor(x, y, radius, color, velocity) {
@@ -68,8 +96,8 @@ class Projectile {
 
     update() {
         this.draw()
-        this.x = this.x + this.velocity.x * 3
-        this.y = this.y + this.velocity.y * 3
+        this.x = this.x + this.velocity.x * 4
+        this.y = this.y + this.velocity.y * 4
     }
 }
 
@@ -91,8 +119,8 @@ class Enemy {
 
     update() {
         this.draw()
-        this.x = this.x + this.velocity.x
-        this.y = this.y + this.velocity.y
+        this.x = this.x + this.velocity.x *2 * dificultad.velocidadEnemigos 
+        this.y = this.y + this.velocity.y *2 * dificultad.velocidadEnemigos 
     }
 }
 
@@ -102,6 +130,7 @@ function animate() {
     c.fillStyle = "rgba(1, 1, 1, 0.1)"
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw()
+    score.update()
     
     projectiles.forEach((projectile, index) => {
         projectile.update()
@@ -130,12 +159,15 @@ function animate() {
                 window.setTimeout(()=>{                             
                     enemies.splice(index, 1)
                     projectiles.splice(indexP, 1)
+                    sumarContador(Math.trunc(600 / enemy.radius))       //suma puntos
                 }, 0)
+
+
             }
         })
 
         const distancia = Math.hypot(enemy.x - xCenter, enemy.y - yCenter)
-        if (distancia <= player.radius + enemy.radius) {
+        if (distancia <= player.radius + enemy.radius) { //Comprobar si el enemigo ha tocado al jugador
             cancelAnimationFrame(animationId)           //cancelamos la animación
             console.log("Has perdido!")
             window.setTimeout(()=>{                             
@@ -143,7 +175,7 @@ function animate() {
             }, 0)
         }
     })
-    console.log(`proyectiles activos: ${projectiles.length}`)
+    console.log(`PUNTOS: ${puntosTotales}`)
 }
 
 /*
@@ -173,9 +205,21 @@ function spawnEnemy(){
             y: Math.sin(angle + Math.PI) 
         }
         enemies.push(new Enemy(x, y, radius, color, vel))
-    }, 1000)
+    }, dificultad.ratioSpawn)
 }
-    
+
+/*
+    Irá cambiando la dificultad a medida que se alcancen los puntos
+*/
+function sumarContador(puntos) {
+    puntosTotales += puntos
+    if (puntosTotales > contador) {
+        console.log("SUBIENDO DIFICULTAD")
+        dificultad.ratioSpawn /= 1000
+        dificultad.velocidadEnemigos += 3
+        contador += 500
+    }
+}
 const projectiles = []
 const enemies = []
 spawnEnemy();
