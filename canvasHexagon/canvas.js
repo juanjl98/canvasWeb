@@ -5,6 +5,15 @@ canvas.width = innerWidth
 const xCenter = canvas.width/2
 const yCenter = canvas.height/2
 const anguloHex = Math.PI/3
+const posiciones = [
+    {x:1, y:0},{x:2, y:0},{x:3, y:0},
+{x:0, y:1}, {x:1, y:1}, {x:2, y:1}, {x:3, y:1},
+{x:0, y:2},{x:1, y:2},{x:2, y:2},{x:3, y:2},{x:4, y:2},
+{x:0, y:3},{x:1, y:3},{x:2, y:3},{x:3, y:3},
+  {x:1, y:4},{x:2, y:4},{x:3, y:4}
+ ]
+const conjuntoValores = ["bosque", "desierto", "piedra", "arcilla", "trigo", "oveja"]
+const conjuntoFichas = []
 
 const tablero = {
     color1: "lightblue",
@@ -95,19 +104,67 @@ function drawTablero() {
     drawHexagon(xCenter, yCenter, canvas.height/2 - 10, 0, tablero.color1, 5, true)
 }
 
+function setCombinacion() {
+    const combinacion = []
+    // 4 ovejas, 4 trigos, 4 maderas, 3 arcillas, 3 piedras, 1 desierto
+    let madera, trigo, oveja, arcilla, piedra, desierto = 0;
+    for (let i = 0; i < 19; i++) {
+        let rnd = Math.trunc(Math.random() * 6)
+        switch (rnd) {
+            case 0:
+                madera++
+                if (madera < 4)
+                    combinacion.push("bosque")
+                else
+                    i--;
+                break;
+            case 1:
+                trigo++
+                if (trigo < 4)
+                    combinacion.push("trigo")
+                else
+                    i--;
+                break;
+            case 2:
+                oveja++
+                if (oveja < 4)
+                    combinacion.push("oveja")
+                else
+                    i--;
+                break;
+            case 3:
+                piedra++
+                if (piedra < 3)
+                    combinacion.push("piedra")
+                else
+                    i--;
+                break;
+            case 4:
+                arcilla++
+                if (arcilla < 3)
+                    combinacion.push("arcilla")
+                else
+                    i--;
+                break;
+            case 5:
+                desierto++
+                if (desierto < 1)
+                    combinacion.push("desierto")
+                else
+                    i--;
+                break;
+        }
+    }
 
-const posiciones = [
-               {x:1, y:0},{x:2, y:0},{x:3, y:0},
-        {x:0, y:1}, {x:1, y:1}, {x:2, y:1}, {x:3, y:1},
-    {x:0, y:2},{x:1, y:2},{x:2, y:2},{x:3, y:2},{x:4, y:2},
-         {x:0, y:3},{x:1, y:3},{x:2, y:3},{x:3, y:3},
-             {x:1, y:4},{x:2, y:4},{x:3, y:4}
-            ]
+    posiciones.forEach((pos, index) => {
+        conjuntoFichas.push(new Ficha(pos.x, pos.y, combinacion[index], false))    
+        conjuntoFichas[index].draw()
+    })
+}
 
-const conjuntoFichas = []
-const conjuntoValores = ["bosque", "desierto", "piedra", "arcilla", "trigo", "oveja"]
+
 posiciones.forEach((pos, index) => {
-    let rnd = Math.trunc(Math.random()*6)
-    conjuntoFichas.push(new Ficha(pos.x, pos.y, conjuntoValores[rnd], false))    
+    conjuntoFichas.push(new Ficha(pos.x, pos.y, conjuntoValores[index%6], false))    
     conjuntoFichas[index].draw()
 })
+//setCombinacion()
