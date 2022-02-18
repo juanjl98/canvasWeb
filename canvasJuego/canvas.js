@@ -20,9 +20,9 @@
 */
 
 let dificultad = {
-    ratioSpawn: 2000,
     velocidadEnemigos: 1
 }
+
 let puntosTotales = 0;
 let contador = 500;
 const canvas = document.querySelector("canvas")
@@ -101,6 +101,33 @@ class Projectile {
     }
 }
 
+class Particula {
+    constructor(x, y, radius, color, velocity) {
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.color = color
+        this.velocity = velocity
+        this.alpha = 1
+    }
+
+    draw() {
+        c.save()
+        c.globalAlpha = this.alpha
+        c.beginPath()
+        c.fillStyle = `rgb(${this.color.red},${this.color.green},${this.color.blue})`
+        c.arc(this.x, this.y, this.radius, 0, Math.PI*2, false)
+        c.fill()
+        c.restore()
+    }
+
+    update() {
+        this.draw()
+        this.x = this.x + this.velocity.x
+        this.y = this.y + this.velocity.y
+        this.alpha -= 0.01
+    }
+}
 class Enemy {
     constructor(x, y, radius, color, velocity) {
         this.x = x
@@ -131,6 +158,13 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw()
     score.update()
+
+    particles.forEach((particula, index) => {
+        particula.update()
+
+        if (particula.alpha <= 0)
+            particles.splice(index, 1)
+    })
     
     projectiles.forEach((projectile, index) => {
         projectile.update()
@@ -151,6 +185,12 @@ function animate() {
         */
             const distancia = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             if (distancia <= projectile.radius + enemy.radius){
+                for (let i = 0; i < 7 ; i++) {
+                    particles.push(new Particula(enemy.x, enemy.y, 3, enemy.color, {
+                        x: Math.random() - 0.5,
+                        y: Math.random() - 0.5
+                    }))
+                }
                 /*  con setTimeout hacemos que el programa utilice un frame para borrar los elementos
                     de las arrays, antes de intentar dibujarlas de nuevo. Así evitamos que los elementos
                     parpadeen al dibujarse (por estar intentando acceder a una array que está siendo usada
@@ -205,7 +245,7 @@ function spawnEnemy(){
             y: Math.sin(angle + Math.PI) 
         }
         enemies.push(new Enemy(x, y, radius, color, vel))
-    }, dificultad.ratioSpawn)
+    }, 1500)
 }
 
 /*
@@ -215,13 +255,13 @@ function sumarContador(puntos) {
     puntosTotales += puntos
     if (puntosTotales > contador) {
         console.log("SUBIENDO DIFICULTAD")
-        dificultad.ratioSpawn /= 1000
-        dificultad.velocidadEnemigos += 3
+        dificultad.velocidadEnemigos += 0.5
         contador += 500
     }
 }
 const projectiles = []
 const enemies = []
+const particles = []
 spawnEnemy();
 
 /*
