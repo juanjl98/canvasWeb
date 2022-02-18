@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8" />
+        <title> CSS test</title>
+        <!-- ASÍ SE IMPLEMENTA CSS EN HTML
+        <style>
+            body{           /*Selector de etiqueta*/
+                background: lightblue;
+
+            }
+            #container{     /*Selector de ID*/
+
+            }
+            .article{       /*Selector de clase*/
+
+            }
+        </style>
+        -->
+        <!-- Y así se adjunta una hoja de estilo CSS -->
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        
+        <div id="container"> 
+
+            <header>
+                <h1> Este elemento está dentro del container</h1>
+            </header>
+
+            <nav>
+                <ul>
+                    <li>
+                        <a href="index.html">
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            Inicio otra vez
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            Vuelve a Inicio
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class = "clearfix">
+                <!--
+                    Utilizamos esta clase para dejar libre el espacio del menú.
+                    La localizamos en CSS
+                -->
+            </div>
+
+            <section id = "content">
+
+                <article class="article" >
+                    <h2>Título del artículo 1</h2>
+                    <p>La etiqueta "nav" establece semánticamente un menú "ul" establece una lista desordenada</p>
+                </article>
+
+                <article class="article" >
+                    <h2>Título del artículo 2</h2>
+                    <p>La etiqueta "section" contiene diferentes artículos</p>
+                </article>
+
+                <article class="article" >
+                    <h2>Título del artículo 3</h2>
+                    <p>La etiqueta "aside" también es semántica y se usa para barras laterales</p>
+                </article>
+
+                <article class="article" >
+                    <h2>Título del artículo 3</h2>
+                    <p>La etiqueta "footer" implica un pie de página</p>
+                </article>
+
+            </section>
+
+            <aside>
+                <h2>Barra lateral</h2>
+                <form>
+                    <input type = "text">
+                    <input type = "submit" value = "Buscar"/>
+                </form>
+            </aside>
+
+            <div class = "clearfix">
+                <!--
+                    Utilizamos esta clase para dejar libre el espacio del menú.
+                    La localizamos en CSS
+                -->
+            </div>
+
+            <footer>
+                Juan Jiménez León &copy; 2022
+            </footer>
+
+        </div>
+    </body>
+</html>
