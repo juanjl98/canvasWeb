@@ -1,0 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*  Si definimos la altura y la anchura aquí,
+    el canvas se pixela */
+#canvas {
+    display:inline;
+    border: 2px solid black;
+}
